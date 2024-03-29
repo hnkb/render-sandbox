@@ -1,0 +1,14 @@
+{
+	"name": "render-sandbox",
+	"module": "server/index.ts",
+	"type": "module",
+	"scripts": {
+		"dev": "bun --hot run server/index.ts"
+	},
+	"devDependencies": {
+		"@types/bun": "latest"
+	},
+	"peerDependencies": {
+		"typescript": "^5.0.0"
+	}
+}
