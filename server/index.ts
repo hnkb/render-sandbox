@@ -1,4 +1,7 @@
 import { join } from 'path';
+import bundler from './bundler';
+
+bundler();
 
 const server = Bun.serve({
 	port: 80,

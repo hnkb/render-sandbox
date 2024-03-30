@@ -3,6 +3,7 @@
 	"module": "server/index.ts",
 	"type": "module",
 	"scripts": {
+		"build": "bun build client/app/index.ts --outdir client/public/app --watch --sourcemap=external --minify",
 		"dev": "bun --hot run server/index.ts"
 	},
 	"devDependencies": {
