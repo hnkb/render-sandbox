@@ -1,0 +1,43 @@
+#pragma once
+
+#include <filesystem>
+#include <string>
+#include <vector>
+
+
+class File
+{
+public:
+	File(const std::filesystem::path& filename, const std::string& mode)
+	{
+		// make sure path exists so we can actually create file
+		if (mode.find('w') != std::string::npos)
+			std::filesystem::create_directories(filename.parent_path());
+
+		handle = fopen(filename.c_str(), mode.c_str());
+	}
+	~File() { fclose(handle); }
+
+	size_t size()
+	{
+		auto current = ftell(handle);
+		fseek(handle, 0, SEEK_END);
+		auto length = ftell(handle);
+		fseek(handle, current, SEEK_SET);
+		return length;
+	}
+
+	operator FILE*() { return handle; }
+
+	template <class Type = uint8_t>
+	static std::vector<Type> readAll(const std::filesystem::path& filename)
+	{
+		File file(filename, "rb");
+		std::vector<Type> data(file.size() / sizeof(Type));
+		fread(data.data(), sizeof(Type), data.size(), file);
+		return data;
+	}
+
+private:
+	FILE* handle = nullptr;
+};

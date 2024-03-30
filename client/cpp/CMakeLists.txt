@@ -2,6 +2,9 @@
 set(TARGET_NAME cpp-core)
 
 add_executable(${TARGET_NAME}
+	device/Buffer.cpp
+	device/Shader.cpp
+	renderer/Renderer.cpp
 	main.cpp
 )
 
@@ -28,6 +31,7 @@ if (DEFINED EMSCRIPTEN)
 		-sINITIAL_MEMORY=268435456
 		-sMAX_WEBGL_VERSION=2
 		--embind-emit-tsd ${TARGET_NAME}.d.ts
+		--embed-file "${CMAKE_CURRENT_SOURCE_DIR}/shaders@shaders"
 	)
 
 	set_target_properties(${TARGET_NAME}

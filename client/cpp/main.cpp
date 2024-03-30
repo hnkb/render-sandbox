@@ -1,19 +1,6 @@
-#include <emscripten.h>
 #include <emscripten/html5.h>
-#include <GLES3/gl3.h>
-#include <string>
+#include "renderer/Renderer.h"
 
-extern "C" {
-// void renderFrame()
-int renderFrame(double time, void* userData)
-{
-	// emscripten_console_log(("Rendering frame " + std::to_string(time)).c_str());
-	// emscripten_console_log("Rendering frame");
-	glClearColor(0.866f, 0.333f, 0.266f, 1.0f);
-	glClear(GL_COLOR_BUFFER_BIT);
-	return true;
-}
-}
 
 int main()
 {
