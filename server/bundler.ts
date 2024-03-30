@@ -20,6 +20,8 @@ async function build() {
 		minify: true,
 	});
 
+	await Bun.write(join(outputDir, 'cpp-core.wasm'), Bun.file(join(sourceDir, 'bin/cpp-core.wasm')));
+
 	if (bundle.success)
 		for (const file of bundle.outputs.filter(e => e.kind === 'entry-point'))
 			await Bun.write(file.path, `${await file.text()}\n//# sourceMappingURL=${parse(file.path).base}.map`);

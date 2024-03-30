@@ -1,0 +1,36 @@
+
+set(TARGET_NAME cpp-core)
+
+add_executable(${TARGET_NAME}
+	main.cpp
+)
+
+target_compile_features(${TARGET_NAME} PUBLIC cxx_std_17)
+
+# Use -Ofast instead of -O3 or -O2 as we don't need floating point standard-compliance
+string (REGEX REPLACE "([\\/\\-]O)[0-3]" "\\1fast" CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE}")
+string (REGEX REPLACE "([\\/\\-]O)[0-3]" "\\1fast" CMAKE_CXX_FLAGS_RELWITHDEBINFO "${CMAKE_CXX_FLAGS_RELWITHDEBINFO}")
+
+if (DEFINED EMSCRIPTEN)
+	message("Configuring for Emscripten build ${CMAKE_BUILD_TYPE}")
+
+	# workaround for VSCode bug calling CMake with empty build type
+	target_compile_options(${TARGET_NAME} PRIVATE
+		$<$<CONFIG:>:-Ofast>
+		# -sUSE_HARFBUZZ
+	)
+
+	target_link_options(${TARGET_NAME} PRIVATE
+		-sENVIRONMENT=web
+		-sEXPORT_ES6
+		-sMODULARIZE
+		#-sUSE_HARFBUZZ
+		-sINITIAL_MEMORY=268435456
+		--embind-emit-tsd ${TARGET_NAME}.d.ts
+	)
+
+	set_target_properties(${TARGET_NAME}
+		PROPERTIES
+			RUNTIME_OUTPUT_DIRECTORY "${PROJECT_SOURCE_DIR}/client/app/bin"
+	)
+endif()
