@@ -24,3 +24,13 @@ function resizeCanvas() {
 resizeCanvas();
 
 window.addEventListener('resize', resizeCanvas);
+
+document.addEventListener('wheel', e => {
+	e.preventDefault();
+
+	if (e.ctrlKey) {
+		m._cameraZoom(e.x * devicePixelRatio, e.y * devicePixelRatio, e.deltaY * devicePixelRatio);
+	} else {
+		m._cameraMove(e.deltaX * devicePixelRatio, e.deltaY * devicePixelRatio);
+	}
+}, { passive: false });
