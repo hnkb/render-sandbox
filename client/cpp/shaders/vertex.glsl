@@ -5,7 +5,7 @@ uniform vec4 camera;
 
 vec4 applyCamera(vec2 position)
 {
-	return vec4((position + camera.xy) * camera.zw, 0, 1.f);
+	return vec4(position * camera.zw + camera.xy, 0, 1.f);
 }
 
 void main()

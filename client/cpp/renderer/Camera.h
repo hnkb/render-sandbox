@@ -26,8 +26,8 @@ public:
 	// TODO: these will be replaced with transformation matrix for projection + view
 	// This is basically the same transformation that happens in shader code (and its
 	// inverse)
-	float2 worldToClip(float2 world) const { return (world + view.offset) * scaleWithAR(); }
-	float2 clipToWorld(float2 clip) const { return clip / scaleWithAR() - view.offset; }
+	float2 worldToClip(float2 world) const { return world * scaleWithAR() + view.offset; }
+	float2 clipToWorld(float2 clip) const { return (clip - view.offset) / scaleWithAR(); }
 
 	float2 pixelToWorld(float2 pixel) const { return clipToWorld(pixelToClip(pixel)); }
 	float2 worldToPixel(float2 world) const { return clipToPixel(worldToClip(world)); }

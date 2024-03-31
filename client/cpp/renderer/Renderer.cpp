@@ -61,7 +61,7 @@ extern "C" EMSCRIPTEN_KEEPALIVE void resizeCanvas(int width, int height)
 
 extern "C" EMSCRIPTEN_KEEPALIVE void cameraMove(float x, float y)
 {
-	camera.view.offset -= float2(x, y) * camera.pixelSize / camera.scaleWithAR();
+	camera.view.offset -= float2(x, y) * camera.pixelSize;
 	shouldRender = true;
 }
 
@@ -73,6 +73,6 @@ extern "C" EMSCRIPTEN_KEEPALIVE void cameraZoom(float x, float y, float delta)
 	auto before = camera.pixelToWorld({ x, y });
 	camera.view.scale *= powf(.995f, delta);
 	auto after = camera.pixelToWorld({ x, y });
-	camera.view.offset -= before - after;
+	camera.view.offset -= (before - after) * camera.scaleWithAR();
 	shouldRender = true;
 }
