@@ -1,6 +1,7 @@
 
 #include "../device/Buffer.h"
 #include "../device/Shader.h"
+#include <emscripten/emscripten.h>
 
 using namespace std;
 
@@ -39,4 +40,10 @@ extern "C" int renderFrame(double time, void* userData)
 	glUseProgram(0);
 
 	return true;
+}
+
+
+extern "C" EMSCRIPTEN_KEEPALIVE void resizeCanvas(int width, int height)
+{
+	glViewport(0, 0, width, height);
 }
