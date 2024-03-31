@@ -1,16 +1,18 @@
 
 #include "Camera.h"
-#include "../device/Buffer.h"
+#include "Primitive.h"
 #include "../device/Shader.h"
 #include <emscripten/emscripten.h>
 
 using namespace std;
 
 bool shouldRender = true;
+
 Camera camera;
+vector<Primitive> primitives;
 
 unique_ptr<ShaderProgram> program;
-unique_ptr<DeviceBuffer> buffer;
+MeshCollection shapes;
 
 const float2 vertexPositions[] = {
 	{ 0.75f, 0.75f },
@@ -27,11 +29,19 @@ extern "C" int renderFrame(double time, void* userData)
 	if (!program)
 	{
 		program.reset(new ShaderProgram("shaders/vertex.glsl", "shaders/fragment.glsl"));
-		buffer.reset(new DeviceBuffer(sizeof(vertexPositions) / sizeof(float2), vertexPositions));
+
+		shapes.buffer.reset(new DeviceBuffer(sizeof(vertexPositions) / sizeof(float2), vertexPositions));
+		shapes.meshes.push_back({ 0, sizeof(vertexPositions) / sizeof(float2) });
+
+		primitives.emplace_back(shapes, 0, 0xdd554480, 0, 0);
+		primitives.emplace_back(shapes, 0, 0xdd554480, -.5f, -.5f);
 	}
 
 	glClearColor(.98f, .98f, .98f, 1.f);
 	glClear(GL_COLOR_BUFFER_BIT);
+
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
 	// Set the program and camera which remain constant throughout the frame
 	{
@@ -41,8 +51,15 @@ extern "C" int renderFrame(double time, void* userData)
 		glUniform4f(program->uniforms.camera, offset.x, offset.y, scale.x, scale.y);
 	}
 
-	if (buffer)
-		buffer->draw();
+	for (const auto& p : primitives)
+	{
+		glUniform2fv(program->uniforms.offset, 1, (float*)&p.offset);
+		if (p.color)
+			glUniform1ui(program->uniforms.color, p.color);
+		p.collection.buffer->draw(
+			p.collection.meshes[p.meshIndex].startIndex,
+			p.collection.meshes[p.meshIndex].indexCount);
+	}
 
 	glBindVertexArray(0);
 	glUseProgram(0);

@@ -43,11 +43,11 @@ DeviceBuffer::~DeviceBuffer()
 	glDeleteBuffers(2, buffers);
 }
 
-void DeviceBuffer::draw() const
+void DeviceBuffer::draw(int first, int count) const
 {
 	glBindVertexArray(vao);
 	if (indexCount)
-		glDrawElements(GL_TRIANGLES, indexCount, GL_UNSIGNED_INT, 0);
+		glDrawElements(GL_TRIANGLES, count, GL_UNSIGNED_INT, (void*)(first * sizeof(uint32_t)));
 	else
-		glDrawArrays(GL_TRIANGLES, 0, vertexCount);
+		glDrawArrays(GL_TRIANGLES, first, count);
 }

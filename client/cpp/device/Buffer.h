@@ -14,7 +14,8 @@ public:
 		const uint32_t* indexData = nullptr);
 	~DeviceBuffer();
 
-	void draw() const;
+	void draw(int first, int count) const;
+	void draw() const { return draw(0, indexCount ? indexCount : vertexCount); }
 
 private:
 	GLuint vao;

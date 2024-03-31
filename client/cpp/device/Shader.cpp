@@ -19,6 +19,8 @@ ShaderProgram::ShaderProgram(
 	std::for_each(shaderList.begin(), shaderList.end(), glDeleteShader);
 
 	uniforms.camera = glGetUniformLocation(handle, "camera");
+	uniforms.offset = glGetUniformLocation(handle, "offset");
+	uniforms.color = glGetUniformLocation(handle, "color");
 }
 
 GLuint ShaderProgram::createShader(GLenum eShaderType, const std::filesystem::path& shaderSource)

@@ -11,6 +11,8 @@ public:
 	struct
 	{
 		GLint camera;
+		GLint offset;
+		GLint color;
 	} uniforms;
 
 	ShaderProgram(
