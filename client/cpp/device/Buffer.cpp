@@ -1,6 +1,8 @@
 
 #include "Buffer.h"
 
+constexpr bool drawWireframe = false;
+
 
 DeviceBuffer::DeviceBuffer(
 	const GLsizeiptr vertexCount,
@@ -45,9 +47,11 @@ DeviceBuffer::~DeviceBuffer()
 
 void DeviceBuffer::draw(int first, int count) const
 {
+	constexpr GLenum mode = drawWireframe ? GL_LINE_LOOP : GL_TRIANGLES;
+
 	glBindVertexArray(vao);
 	if (indexCount)
-		glDrawElements(GL_TRIANGLES, count, GL_UNSIGNED_INT, (void*)(first * sizeof(uint32_t)));
+		glDrawElements(mode, count, GL_UNSIGNED_INT, (void*)(first * sizeof(uint32_t)));
 	else
-		glDrawArrays(GL_TRIANGLES, first, count);
+		glDrawArrays(mode, first, count);
 }
