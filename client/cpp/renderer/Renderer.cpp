@@ -13,6 +13,7 @@ vector<Primitive> primitives;
 
 unique_ptr<ShaderProgram> program;
 MeshCollection shapes;
+MeshCollection shapes2;
 MeshCollection shapes3;
 
 
@@ -25,10 +26,14 @@ extern "C" int renderFrame(double time, void* userData)
 	{
 		program.reset(new ShaderProgram("shaders/vertex.glsl", "shaders/fragment.glsl"));
 		createPolygonShapes(shapes);
+		createPolygonShapes2(shapes2);
 		createPolygonShapes3(shapes3);
 
 		for (int i = 0; i < shapes.meshes.size(); i++)
 			primitives.emplace_back(shapes, i, 0xff, i * 1.1f - 3.f, -.25f);
+
+		for (int i = 0; i < shapes2.meshes.size(); i++)
+			primitives.emplace_back(shapes2, i, 0x800000ff, i * 1.1f - 3.f, -2.5f);
 
 		for (int i = 0; i < shapes3.meshes.size(); i++)
 			primitives.emplace_back(shapes3, i, 0x800080ff, i * 1.1f - 3.f, -4.75f);

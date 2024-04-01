@@ -6,6 +6,7 @@ add_executable(${TARGET_NAME}
 	device/Shader.cpp
 	graphics/Shapes.cpp
 	graphics/Shapes-DelaBella.cpp
+	graphics/Shapes-libTess2.cpp
 	renderer/Renderer.cpp
 	main.cpp
 )
@@ -43,4 +44,4 @@ if (DEFINED EMSCRIPTEN)
 endif()
 
 add_subdirectory("third-party")
-target_link_libraries(${TARGET_NAME} PRIVATE delabella)
+target_link_libraries(${TARGET_NAME} PRIVATE delabella libtess2)
