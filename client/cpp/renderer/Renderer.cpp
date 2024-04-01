@@ -1,7 +1,7 @@
 
 #include "Camera.h"
-#include "Primitive.h"
 #include "../device/Shader.h"
+#include "../graphics/Shapes.h"
 #include <emscripten/emscripten.h>
 
 using namespace std;
@@ -14,12 +14,6 @@ vector<Primitive> primitives;
 unique_ptr<ShaderProgram> program;
 MeshCollection shapes;
 
-const float2 vertexPositions[] = {
-	{ 0.75f, 0.75f },
-	{ 0.75f, -0.75f },
-	{ -0.75f, -0.75f },
-};
-
 
 extern "C" int renderFrame(double time, void* userData)
 {
@@ -29,12 +23,10 @@ extern "C" int renderFrame(double time, void* userData)
 	if (!program)
 	{
 		program.reset(new ShaderProgram("shaders/vertex.glsl", "shaders/fragment.glsl"));
+		createPolygonShapes(shapes);
 
-		shapes.buffer.reset(new DeviceBuffer(sizeof(vertexPositions) / sizeof(float2), vertexPositions));
-		shapes.meshes.push_back({ 0, sizeof(vertexPositions) / sizeof(float2) });
-
-		primitives.emplace_back(shapes, 0, 0xdd554480, 0, 0);
-		primitives.emplace_back(shapes, 0, 0xdd554480, -.5f, -.5f);
+		for (int i = 0; i < shapes.meshes.size(); i++)
+			primitives.emplace_back(shapes, i, 0xdd554480, i * 1.1f - 3.f, -.25f);
 	}
 
 	glClearColor(.98f, .98f, .98f, 1.f);

@@ -4,6 +4,7 @@ set(TARGET_NAME cpp-core)
 add_executable(${TARGET_NAME}
 	device/Buffer.cpp
 	device/Shader.cpp
+	graphics/Shapes.cpp
 	renderer/Renderer.cpp
 	main.cpp
 )
