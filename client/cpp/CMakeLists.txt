@@ -6,6 +6,8 @@ add_executable(${TARGET_NAME}
 	device/Shader.cpp
 	graphics/Shapes.cpp
 	renderer/Renderer.cpp
+	text/Font.cpp
+	text/Layout.cpp
 	main.cpp
 )
 
@@ -21,14 +23,14 @@ if (DEFINED EMSCRIPTEN)
 	# workaround for VSCode bug calling CMake with empty build type
 	target_compile_options(${TARGET_NAME} PRIVATE
 		$<$<CONFIG:>:-Ofast>
-		# -sUSE_HARFBUZZ
+		-sUSE_HARFBUZZ
 	)
 
 	target_link_options(${TARGET_NAME} PRIVATE
 		-sENVIRONMENT=web
 		-sEXPORT_ES6
 		-sMODULARIZE
-		#-sUSE_HARFBUZZ
+		-sUSE_HARFBUZZ
 		-sINITIAL_MEMORY=268435456
 		-sMAX_WEBGL_VERSION=2
 		--embind-emit-tsd ${TARGET_NAME}.d.ts
