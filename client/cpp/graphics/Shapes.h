@@ -4,6 +4,7 @@
 
 
 void createPolygonShapes(MeshCollection& shapes);
+void createPolygonShapes3(MeshCollection& shapes);
 
 namespace Shapes
 {

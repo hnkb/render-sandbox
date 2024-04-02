@@ -5,6 +5,7 @@ add_executable(${TARGET_NAME}
 	device/Buffer.cpp
 	device/Shader.cpp
 	graphics/Shapes.cpp
+	graphics/Shapes-DelaBella.cpp
 	renderer/Renderer.cpp
 	main.cpp
 )
@@ -40,3 +41,6 @@ if (DEFINED EMSCRIPTEN)
 			RUNTIME_OUTPUT_DIRECTORY "${PROJECT_SOURCE_DIR}/client/app/bin"
 	)
 endif()
+
+add_subdirectory("third-party")
+target_link_libraries(${TARGET_NAME} PRIVATE delabella)
