@@ -11,5 +11,5 @@ vec4 applyCamera(vec2 position)
 
 void main()
 {
-	gl_Position = applyCamera(position + offset);
+	gl_Position = applyCamera(position + offset * vec2(1, -1));
 }
