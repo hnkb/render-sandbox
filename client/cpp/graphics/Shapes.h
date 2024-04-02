@@ -3,6 +3,7 @@
 #include "../renderer/Primitive.h"
 
 
+// MeshCollection createPolygonShapes();
 void createPolygonShapes(MeshCollection& shapes);
 void createPolygonShapes2(MeshCollection& shapes);
 void createPolygonShapes3(MeshCollection& shapes);

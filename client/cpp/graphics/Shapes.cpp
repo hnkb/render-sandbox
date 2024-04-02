@@ -32,6 +32,9 @@ Mesh addPolygon(vector<float2>& vertices, vector<uint32_t>& indices, const int v
 	return { startIndex, (int)indices.size() - startIndex };
 }
 
+// MeshCollection createPolygonShapes()
+// {
+// 	MeshCollection shapes;
 void createPolygonShapes(MeshCollection& shapes)
 {
 	vector<float2> vertices = { { +.5f, +.5f }, { +.5f, -.5f }, { -.5f, -.5f }, { -.5f, +.5f } };
@@ -53,4 +56,6 @@ void createPolygonShapes(MeshCollection& shapes)
 
 	shapes.buffer.reset(
 		new DeviceBuffer(vertices.size(), vertices.data(), indices.size(), indices.data()));
+
+	// return shapes;
 }
