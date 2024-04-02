@@ -2,10 +2,6 @@
 set(TARGET_NAME cpp-core)
 
 add_executable(${TARGET_NAME}
-	device/Buffer.cpp
-	device/Shader.cpp
-	graphics/Shapes.cpp
-	renderer/Renderer.cpp
 	text/Font.cpp
 	text/Layout.cpp
 	main.cpp
@@ -31,8 +27,10 @@ if (DEFINED EMSCRIPTEN)
 		-sEXPORT_ES6
 		-sMODULARIZE
 		-sUSE_HARFBUZZ
-		-sINITIAL_MEMORY=268435456
+
+		-sINITIAL_MEMORY=536870912
 		-sMAX_WEBGL_VERSION=2
+		-lembind
 		--embind-emit-tsd ${TARGET_NAME}.d.ts
 		--embed-file "${CMAKE_CURRENT_SOURCE_DIR}/assets@."
 	)

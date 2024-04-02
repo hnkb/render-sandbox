@@ -5,21 +5,22 @@
 using namespace std;
 
 
-Font::Font(const filesystem::path& filename)
+Font::Font(const string& name)
 {
+	const auto filename = filesystem::path("fonts") / (name + ".ttf");
 	auto file = filename;
 
 	file.replace_extension(".vert");
-	auto vertices = File::readAll<float2>(file);
+	vertices = File::readAll<float>(file);
 
 	file.replace_extension(".idx");
-	auto indices = File::readAll<uint32_t>(file);
+	indices = File::readAll<uint32_t>(file);
 
 	file.replace_extension(".mesh");
-	meshes = File::readAll<Mesh>(file);
-
-	buffer.reset(
-		new DeviceBuffer(vertices.size(), vertices.data(), indices.size(), indices.data()));
+	const auto meshes = File::readAll<Mesh>(file);
+	meshesArray = emscripten::val::array();
+	for (auto& mesh : meshes)
+		meshesArray.call<void>("push", emscripten::val(mesh));
 
 	printf(
 		"Font '%s' loaded into %.2f MB buffer with %zu glyphs, %zu vertices, %zu indices.\n",
@@ -34,16 +35,37 @@ Font::Font(const filesystem::path& filename)
 	hb_face = hb_face_create(blob, 0);
 	hb_font = hb_font_create((hb_face_t*)hb_face);
 	hb_blob_destroy(blob);
-
-	hb_font_extents_t extents;
-	if (!hb_font_get_h_extents((hb_font_t*)hb_font, &extents))
-		fprintf(stderr, "Failed to get font extents.\n");
-	line_height = (extents.ascender - extents.descender + extents.line_gap)
-				  / hb_face_get_upem((hb_face_t*)hb_face);
 }
 
 Font::~Font()
 {
 	hb_font_destroy((hb_font_t*)hb_font);
 	hb_face_destroy((hb_face_t*)hb_face);
+}
+
+
+EMSCRIPTEN_BINDINGS(vector_text)
+{
+	emscripten::value_array<float2>("float2")
+		.element(&float2::x)
+		.element(&float2::y)
+		;
+
+	emscripten::value_object<Mesh>("Mesh")
+		.field("startIndex", &Mesh::startIndex)
+		.field("indexCount", &Mesh::indexCount)
+		;
+
+	emscripten::value_object<Font::ShapedGlyph>("ShapedGlyph")
+		.field("index", &Font::ShapedGlyph::index)
+		.field("pos", &Font::ShapedGlyph::pos)
+		;
+
+	emscripten::class_<Font>("Font")
+		.constructor<const string&>()
+		.function("shape", &Font::shape)
+		.property("vertexData", &Font::getVertexData)
+		.property("indexData", &Font::getIndexData)
+		.property("meshesArray", &Font::getMeshesArray)
+		;
 }

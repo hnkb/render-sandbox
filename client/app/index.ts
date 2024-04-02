@@ -1,36 +1,19 @@
-import Module from './bin/cpp-core';
+import Module, { type Mesh, type ShapedGlyph, type Font as NativeFont } from './bin/cpp-core';
 
 const m = await Module();
 
 
-const devicePixelRatio = window.devicePixelRatio || 1;
-
-function resizeCanvas() {
-	const width = window.innerWidth * devicePixelRatio;
-	const height = window.innerHeight * devicePixelRatio;
-
-	const canvas = document.querySelector('canvas.main') as HTMLCanvasElement;
-
-	// Set the display size of the canvas.
-	canvas.style.width = window.innerWidth + 'px';
-	canvas.style.height = window.innerHeight + 'px';
-	// Set the size of the drawingBuffer
-	canvas.width = width;
-	canvas.height = height;
-
-	m._resizeCanvas(width, height);
+type Font = NativeFont & {
+	meshes: Mesh[];
 }
 
-resizeCanvas();
+const font = new m.Font("OpenSans-Regular") as Font;
+font.meshes = font.meshesArray as Mesh[];
 
-window.addEventListener('resize', resizeCanvas);
-
-document.addEventListener('wheel', e => {
-	e.preventDefault();
-
-	if (e.ctrlKey) {
-		m._cameraZoom(e.x * devicePixelRatio, e.y * devicePixelRatio, e.deltaY * devicePixelRatio);
-	} else {
-		m._cameraMove(e.deltaX * devicePixelRatio, e.deltaY * devicePixelRatio);
-	}
-}, { passive: false });
+console.log(font.vertexData);
+console.log(font.indexData);
+console.log(font.meshes);
+const shaped = font.shape("Hello") as ShapedGlyph[];
+console.log(shaped);
+console.log(shaped[0].pos);
+font.delete();

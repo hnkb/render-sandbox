@@ -1,27 +1,46 @@
 #pragma once
 
-#include "../renderer/Primitive.h"
+#include "../utils/Math.h"
 #include <string>
 #include <memory>
-#include <filesystem>
+#include <emscripten/bind.h>
 
 
-class Font : public MeshCollection
+struct Mesh
+{
+	int startIndex;
+	int indexCount;
+};
+
+template <typename Type>
+inline auto toTypedMemoryView(const std::vector<Type>& vec)
+{
+	return emscripten::val(emscripten::typed_memory_view(vec.size(), vec.data()));
+}
+
+class Font
 {
 public:
-	Font(const std::filesystem::path& filename);
+	Font(const std::string& name);
 	~Font();
-
-	void* hb_font;
-	void* hb_face;
-	float line_height = 0;
 
 	struct ShapedGlyph
 	{
 		uint32_t index;
 		float2 pos;
-		ShapedGlyph(uint32_t index, float2 pos) : index(index), pos(pos) {}
 	};
 
-	std::vector<ShapedGlyph> shape(const std::string& text) const;
+	emscripten::val shape(const std::string& text) const;
+
+	auto getVertexData() const { return toTypedMemoryView(vertices); }
+	auto getIndexData() const { return toTypedMemoryView(indices); }
+	auto& getMeshesArray() const { return meshesArray; }
+
+private:
+	void* hb_font;
+	void* hb_face;
+
+	std::vector<float> vertices;
+	std::vector<uint32_t> indices;
+	emscripten::val meshesArray;
 };
