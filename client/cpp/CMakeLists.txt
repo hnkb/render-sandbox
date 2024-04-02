@@ -34,7 +34,7 @@ if (DEFINED EMSCRIPTEN)
 		-sINITIAL_MEMORY=268435456
 		-sMAX_WEBGL_VERSION=2
 		--embind-emit-tsd ${TARGET_NAME}.d.ts
-		--embed-file "${CMAKE_CURRENT_SOURCE_DIR}/shaders@shaders"
+		--embed-file "${CMAKE_CURRENT_SOURCE_DIR}/assets@."
 	)
 
 	set_target_properties(${TARGET_NAME}
