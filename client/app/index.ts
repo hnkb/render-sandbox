@@ -1,5 +1,18 @@
 import Module from './bin/cpp-core';
 
+const editor = document.createElement('div');
+editor.id = 'editor';
+editor.innerHTML = 'Type here';
+editor.style.position = 'fixed';
+editor.style.top = '0';
+editor.style.left = '0';
+editor.style.zIndex = '1000';
+editor.style.width = '100000px';
+editor.style.color = 'rgba(0, 30, 200, .7)';
+editor.style.transformOrigin = '0 0';
+editor.contentEditable = 'true';
+document.body.appendChild(editor);
+
 const m = await Module();
 
 

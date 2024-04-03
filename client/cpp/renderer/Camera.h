@@ -18,6 +18,7 @@ public:
 	{
 		this->pixelSize = float2(2, -2) / (float2)dims;
 		aspectRatio = dims.x / (float)dims.y;
+		screenSize = (float2)dims;
 	}
 
 	float2 pixelToClip(float2 pixel) const { return pixel * pixelSize + float2(-1, 1); }
@@ -49,4 +50,5 @@ public:
 	// private:  (made public for unit tests)
 	float2 pixelSize;
 	float aspectRatio = 1.f;
+	float2 screenSize = { 0, 0 };
 };

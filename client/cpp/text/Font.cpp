@@ -40,6 +40,19 @@ Font::Font(const filesystem::path& filename)
 		fprintf(stderr, "Failed to get font extents.\n");
 	line_height = (extents.ascender - extents.descender + extents.line_gap)
 				  / hb_face_get_upem((hb_face_t*)hb_face);
+
+	// const float upem = hb_face_get_upem((hb_face_t*)hb_face);
+	// printf(
+	// 	" - ascender: %f  descender %f  line_gap %f\n",
+	// 	extents.ascender / upem,
+	// 	extents.descender / upem,
+	// 	extents.line_gap / upem);
+
+	// // unsigned int typo_ascender;
+	// auto x =
+	// 	hb_ot_metrics_get_y_variation((hb_font_t*)hb_font, hb_ot_metrics_tag_t::HB_OT_METRICS_TAG_HORIZONTAL_ASCENDER);
+	// // hb_ot_metrics_get_position((hb_font_t*)hb_font, HB_OT_METRICS_TAG_HORIZONTAL_ASCENDER,
+	// // &typo_ascender);
 }
 
 Font::~Font()
