@@ -52,9 +52,10 @@ extern "C" int renderFrame(double time, void* userData)
 		fonts.emplace_back(new Font("fonts/Overpass-Bold.ttf"));
 		fonts.emplace_back(new Font("fonts/IBMPlexSansArabic-Regular.ttf"));
 		fonts.emplace_back(new Font("fonts/MPLUS1p-Regular.ttf"));
+		fonts.emplace_back(new Font("fonts/Caveat-Regular.ttf"));
 
 		// addText(*fonts[0], "Lorem ipsum dolor sit amet,\nconsectetur adipiscing elit,\nsed do eiusmod tempor incididunt ut labore et dolore magna aliqua.", 0, 0, 0xdd5544ffu);
-		addText(*fonts[4], "明日は晴れるといいですね。\n桜の花も咲くでしょう。\n春の訪れを感じます。", 0, 0, 0xdd5544ffu);
+		// addText(*fonts[4], "明日は晴れるといいですね。\n桜の花も咲くでしょう。\n春の訪れを感じます。", 0, 0, 0xdd5544ffu);
 		// addText(*fonts[3], "الا یا ایها الساقی ادر کأسا و ناولها\nکه عشق آسان نمود اول ولی افتاد مشکل‌ها", 0, 0, 0xdd554480u);
 
 // addText(*fonts[3], "الا یا hello ایها الساقی ادر کأسا و ناولها\nکه عشق آسان نمود اول ولی افتاد مشکل‌ها", 0, 0, 0xdd554480u);
@@ -62,7 +63,7 @@ extern "C" int renderFrame(double time, void* userData)
 
 		// const auto fileContent = File::readAll<char>("text.txt");
 		// const auto text = string(fileContent.begin(), fileContent.end());
-		// addText(*fonts[0], text, 0, 0, 0xdd5544ffu);
+		addText(*fonts[5], "It is a truth universally known", 0, 0, 0xdd5544ffu);
 
 		camera.view.scale = .35f;
 		camera.view.offset = { -.7f, .35f };
