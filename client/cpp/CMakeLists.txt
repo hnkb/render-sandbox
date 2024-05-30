@@ -31,7 +31,7 @@ if (DEFINED EMSCRIPTEN)
 		-sINITIAL_MEMORY=536870912
 		-sMAX_WEBGL_VERSION=2
 		-lembind
-		--embind-emit-tsd ${TARGET_NAME}.d.ts
+		--emit-tsd ${TARGET_NAME}.d.ts
 		--embed-file "${CMAKE_CURRENT_SOURCE_DIR}/assets@."
 	)
 

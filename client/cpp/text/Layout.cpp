@@ -4,7 +4,7 @@
 using namespace std;
 
 
-emscripten::val Font::shape(const string& text) const
+ShapedGlyphArray Font::shape(const string& text) const
 {
 	auto face = (hb_face_t*)hb_face;
 	auto font = (hb_font_t*)hb_font;
@@ -38,5 +38,5 @@ emscripten::val Font::shape(const string& text) const
 
 	hb_buffer_destroy(buffer);
 
-	return output;
+	return ShapedGlyphArray(output);
 }

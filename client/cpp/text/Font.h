@@ -6,6 +6,11 @@
 #include <emscripten/bind.h>
 
 
+EMSCRIPTEN_DECLARE_VAL_TYPE(Float32Array);
+EMSCRIPTEN_DECLARE_VAL_TYPE(Uint32Array);
+EMSCRIPTEN_DECLARE_VAL_TYPE(MeshArray);
+EMSCRIPTEN_DECLARE_VAL_TYPE(ShapedGlyphArray);
+
 struct Mesh
 {
 	int startIndex;
@@ -30,11 +35,11 @@ public:
 		float2 pos;
 	};
 
-	emscripten::val shape(const std::string& text) const;
+	ShapedGlyphArray shape(const std::string& text) const;
 
-	auto getVertexData() const { return toTypedMemoryView(vertices); }
-	auto getIndexData() const { return toTypedMemoryView(indices); }
-	auto& getMeshesArray() const { return meshesArray; }
+	auto getVertexData() const { return Float32Array(toTypedMemoryView(vertices)); }
+	auto getIndexData() const { return Uint32Array(toTypedMemoryView(indices)); }
+	MeshArray getMeshesArray() const;
 
 private:
 	void* hb_font;
@@ -42,5 +47,5 @@ private:
 
 	std::vector<float> vertices;
 	std::vector<uint32_t> indices;
-	emscripten::val meshesArray;
+	std::vector<Mesh> meshes;
 };

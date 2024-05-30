@@ -8,12 +8,12 @@ type Font = NativeFont & {
 }
 
 const font = new m.Font("OpenSans-Regular") as Font;
-font.meshes = font.meshesArray as Mesh[];
+font.meshes = font.getMeshesArray();
 
 console.log(font.vertexData);
 console.log(font.indexData);
 console.log(font.meshes);
-const shaped = font.shape("Hello") as ShapedGlyph[];
+const shaped = font.shape("Hello")
 console.log(shaped);
 console.log(shaped[0].pos);
 font.delete();
