@@ -27,6 +27,9 @@ ShapedGlyphArray Font::shape(const string& text) const
 
 	for (unsigned int i = 0; i < glyph_count; i++)
 	{
+		if (glyph_info[i].codepoint==0)
+			return ShapedGlyphArray(emscripten::val::null());
+
 		ShapedGlyph glyph;
 		glyph.index = glyph_info[i].codepoint;
 		glyph.pos = cursor + float2 { glyph_pos[i].x_offset / scale, glyph_pos[i].y_offset / scale };

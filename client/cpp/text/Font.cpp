@@ -79,5 +79,5 @@ EMSCRIPTEN_BINDINGS(vector_text)
 	register_type<Float32Array>("Float32Array");
 	register_type<Uint32Array>("Uint32Array");
 	register_type<MeshArray>("Mesh[]");
-	register_type<ShapedGlyphArray>("ShapedGlyph[]");
+	register_type<ShapedGlyphArray>("ShapedGlyph[] | null");
 }
