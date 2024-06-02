@@ -4,6 +4,7 @@ set(TARGET_NAME cpp-core)
 add_executable(${TARGET_NAME}
 	text/Font.cpp
 	text/Layout.cpp
+	utils/Compression.cpp
 	main.cpp
 )
 
@@ -40,3 +41,7 @@ if (DEFINED EMSCRIPTEN)
 			RUNTIME_OUTPUT_DIRECTORY "${PROJECT_SOURCE_DIR}/client/app/bin"
 	)
 endif()
+
+
+add_subdirectory("third-party")
+target_link_libraries(${TARGET_NAME} PRIVATE brotlidec brotlicommon)

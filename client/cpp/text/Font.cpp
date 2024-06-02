@@ -1,4 +1,5 @@
 #include "Font.h"
+#include "../utils/Compression.h"
 #include "../utils/File.h"
 #include <hb.h>
 
@@ -10,14 +11,14 @@ Font::Font(const string& name)
 	const auto filename = filesystem::path("fonts") / (name + ".ttf");
 	auto file = filename;
 
-	file.replace_extension(".vert");
-	vertices = File::readAll<float>(file);
+	file.replace_extension(".vert-brotli");
+	vertices = decompress<float>(File::readAll(file));
 
-	file.replace_extension(".idx");
-	indices = File::readAll<uint32_t>(file);
+	file.replace_extension(".idx-brotli");
+	indices = decompress<uint32_t>(File::readAll(file));
 
-	file.replace_extension(".mesh");
-	meshes = File::readAll<Mesh>(file);
+	file.replace_extension(".mesh-brotli");
+	meshes = decompress<Mesh>(File::readAll(file));
 
 	printf(
 		"Font '%s' loaded into %.2f MB buffer with %zu glyphs, %zu vertices, %zu indices.\n",
@@ -54,9 +55,9 @@ using namespace emscripten;
 EMSCRIPTEN_BINDINGS(vector_text)
 {
 	value_array<float2>("float2")
-		.element(&float2::x)
-		.element(&float2::y)
-		;
+	.element(&float2::x)
+	.element(&float2::y)
+	;
 
 	value_object<Mesh>("Mesh")
 		.field("startIndex", &Mesh::startIndex)
