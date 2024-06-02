@@ -44,4 +44,10 @@ endif()
 
 
 add_subdirectory("third-party")
-target_link_libraries(${TARGET_NAME} PRIVATE brotlidec brotlicommon)
+target_link_libraries(${TARGET_NAME} PRIVATE
+	brotlidec brotlicommon
+	woff2dec woff2common
+)
+target_include_directories(${TARGET_NAME} PRIVATE
+	"${CMAKE_CURRENT_SOURCE_DIR}/third-party/woff2/include"
+)

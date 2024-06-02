@@ -1,14 +1,32 @@
 #include "Font.h"
 #include "../utils/Compression.h"
 #include "../utils/File.h"
+#include <woff2/decode.h>
 #include <hb.h>
 
 using namespace std;
 
 
+string* readWOFF2(const filesystem::path& filename)
+{
+	const auto compressed = File::readAll(filename);
+	auto estimate = woff2::ComputeWOFF2FinalSize(compressed.data(), compressed.size());
+	auto buffer = new string(estimate, 0);
+	woff2::WOFF2StringOut output(buffer);
+	if (!woff2::ConvertWOFF2ToTTF(compressed.data(), compressed.size(), &output))
+	{
+		printf("%s decompression failed.\n", filename.u8string().c_str());
+		buffer->clear();
+	}
+	return buffer;
+}
+
+hb_destroy_func_t clearFontBuffer = [](void* data) { delete (string*)data; };
+
+
 Font::Font(const string& name)
 {
-	const auto filename = filesystem::path("fonts") / (name + ".ttf");
+	const auto filename = filesystem::path("fonts") / (name + ".woff2");
 	auto file = filename;
 
 	file.replace_extension(".vert-brotli");
@@ -29,7 +47,21 @@ Font::Font(const string& name)
 		vertices.size(),
 		indices.size());
 
-	auto blob = hb_blob_create_from_file(filename.u8string().c_str());
+	hb_blob_t* blob;
+	if (filename.extension() == ".woff2")
+	{
+		auto fontData = readWOFF2(filename);
+		blob = hb_blob_create(
+			fontData->data(),
+			fontData->size(),
+			HB_MEMORY_MODE_READONLY,
+			fontData,
+			clearFontBuffer);
+	}
+	else
+	{
+		blob = hb_blob_create_from_file(filename.u8string().c_str());
+	}
 	hb_face = hb_face_create(blob, 0);
 	hb_font = hb_font_create((hb_face_t*)hb_face);
 	hb_blob_destroy(blob);
