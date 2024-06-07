@@ -1,6 +1,7 @@
 #include "Font.h"
 #include "../utils/File.h"
 #include <hb.h>
+#include <iostream>
 
 using namespace std;
 
@@ -35,11 +36,14 @@ Font::Font(const filesystem::path& filename)
 	hb_font = hb_font_create((hb_face_t*)hb_face);
 	hb_blob_destroy(blob);
 
+	float scale = hb_face_get_upem((hb_face_t*)hb_face); 
+
 	hb_font_extents_t extents;
 	if (!hb_font_get_h_extents((hb_font_t*)hb_font, &extents))
 		fprintf(stderr, "Failed to get font extents.\n");
 	line_height = (extents.ascender - extents.descender + extents.line_gap)
 				  / hb_face_get_upem((hb_face_t*)hb_face);
+	cout << extents.ascender / scale << ", " << extents.descender / scale << ", " << extents.line_gap / scale << endl;
 
 	// const float upem = hb_face_get_upem((hb_face_t*)hb_face);
 	// printf(

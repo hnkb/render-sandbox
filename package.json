@@ -3,7 +3,7 @@
 	"module": "server/index.ts",
 	"type": "module",
 	"scripts": {
-		"setup-cpp": "rm -rf build && mkdir build && cd build && emcmake cmake -DCMAKE_BUILD_TYPE=Release -G Ninja ..",
+		"setup-cpp": "rm -rf build && mkdir build && cd build && emcmake cmake -DCMAKE_BUILD_TYPE=Debug -G Ninja ..",
 		"build-cpp": "if [ ! -d \"build\" ]; then bun run setup-cpp; fi && cd build && emmake ninja",
 		"build-js": "bun build client/app/index.ts --outdir client/public/app --watch --sourcemap=external --minify",
 		"dev": "bun --hot run server/index.ts"

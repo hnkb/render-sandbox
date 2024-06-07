@@ -22,7 +22,7 @@ float2 pos;
 
 void addText(const Font& font, const string& text, float x, float y, uint32_t color = 0)
 {
-	pos = (&font == fonts[3].get()) ? float2(0, .835f) : float2(0, .887565f);
+	pos = float2(0, 0);// (&font == fonts[3].get()) ? float2(0, .835f) : float2(0, .887565f);
 
 	const auto layout = font.shape(text);
 	for (const auto& glyph : layout)
@@ -51,10 +51,10 @@ extern "C" int renderFrame(double time, void* userData)
 		fonts.emplace_back(new Font("fonts/Overpass-Regular.ttf"));
 		fonts.emplace_back(new Font("fonts/Overpass-Bold.ttf"));
 		fonts.emplace_back(new Font("fonts/IBMPlexSansArabic-Regular.ttf"));
-		fonts.emplace_back(new Font("fonts/MPLUS1p-Regular.ttf"));
+		fonts.emplace_back(new Font("fonts/NotoSansJP-Bold.ttf"));
 		fonts.emplace_back(new Font("fonts/Caveat-Regular.ttf"));
 
-		// addText(*fonts[0], "Lorem ipsum dolor sit amet,\nconsectetur adipiscing elit,\nsed do eiusmod tempor incididunt ut labore et dolore magna aliqua.", 0, 0, 0xdd5544ffu);
+		addText(*fonts[3], "Lorem ipsum dolor sit amet,\nconsectetur adipiscing elit,\nsed do eiusmod tempor incididunt ut labore et dolore magna aliqua.", 0, 0, 0xdd5544ffu);
 		// addText(*fonts[4], "明日は晴れるといいですね。\n桜の花も咲くでしょう。\n春の訪れを感じます。", 0, 0, 0xdd5544ffu);
 		// addText(*fonts[3], "الا یا ایها الساقی ادر کأسا و ناولها\nکه عشق آسان نمود اول ولی افتاد مشکل‌ها", 0, 0, 0xdd554480u);
 
@@ -63,7 +63,7 @@ extern "C" int renderFrame(double time, void* userData)
 
 		// const auto fileContent = File::readAll<char>("text.txt");
 		// const auto text = string(fileContent.begin(), fileContent.end());
-		addText(*fonts[5], "It is a truth universally known", 0, 0, 0xdd5544ffu);
+		// addText(*fonts[5], "It is a truth universally known", 0, 0, 0xdd5544ffu);
 
 		camera.view.scale = .35f;
 		camera.view.offset = { -.7f, .35f };
@@ -101,10 +101,13 @@ extern "C" int renderFrame(double time, void* userData)
 		// // const auto pos = float2(0, .887565f) * camera.view.scale;
 		// const auto pos = float2(0, .835f) * camera.view.scale;
 
-		const auto offset =
-			((pos* camera.view.scale + camera.view.offset) / camera.pixelSize + camera.screenSize / 2) / dpr;
+		float2 pos_fixed = pos;
+		// base
 
-		const auto fontSize = camera.screenSize.y / 2.f / dpr;
+		const auto offset =
+			((pos_fixed * camera.view.scale + camera.view.offset) / camera.pixelSize + camera.screenSize / 2);
+
+		const auto fontSize = camera.screenSize.y / 2.f;
 
 		EM_ASM_(
 			{
@@ -113,11 +116,22 @@ extern "C" int renderFrame(double time, void* userData)
 				const translateY = $2;
 				const fontSize = $3;
 
-				const editor = document.getElementById('editor');
-				editor.style.transform = 'translate(' + translateX + 'px,' + translateY + 'px) '
-										 + 'scale(' + scale + ',' + scale + ')';
-				editor.style.fontSize = fontSize + 'px';
-				editor.style.lineHeight = fontSize + 'px';
+				const textTemplate = document.getElementById('textTemplate');
+				const ctx = textTemplate.getContext('2d');
+
+				ctx.resetTransform();
+				ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+				ctx.translate(translateX, translateY);
+				ctx.scale(scale, scale);
+				ctx.textBaseline = 'alphabetic';
+				ctx.font = `${fontSize}px "ZXX Noise"`;
+				const metrics = window.getFontMetrics("ZXX Noise", fontSize);
+
+				let y = fontSize + metrics.baselineOffset;
+				for (const line of window.templateText) {
+					ctx.fillText(line, 0, y);
+					y += fontSize;
+				}
 			},
 			camera.view.scale,
 			offset.x,
